@@ -47,6 +47,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: rlespinasse/github-slug-action@v4
 
       - name: Setup qemu for docker
@@ -59,6 +61,7 @@ jobs:
       - name: Compile in docker
         uses: docker/build-push-action@v5
         with:
+          context: .
           platforms: ${{ matrix.target.platform }}
           outputs: build
           build-args: |
@@ -76,7 +79,7 @@ jobs:
             rm build/.build-metadata.env
           fi
           APPIMAGE_SOURCE=build
-          APPIMAGE_VERSION="${GITHUB_REF_SLUG}-${{ matrix.base.codename }}"
+          APPIMAGE_VERSION="${VERSION}-${{ matrix.base.codename }}"
           APPIMAGE_APT_ARCH="${TARGETARCH}"
           APPIMAGE_APT_DISTRO="${{ matrix.base.codename }}"
           APPIMAGE_APT_PUBKEY="${{ matrix.base.pubkey }}"

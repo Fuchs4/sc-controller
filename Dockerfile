@@ -14,12 +14,16 @@ RUN <<EOR
 	fi
 
 	apt-get update
+	export DEBIAN_FRONTEND=noninteractive
 	apt-get install -y --no-install-recommends \
 		gcc \
+		git \
 		librsvg2-bin \
+		libxfixes3 \
 		linux-headers-generic \
 		python3-dev \
 		python3-setuptools \
+		python3-usb \
 		python3-venv \
 		python-is-python3
 
@@ -43,10 +47,19 @@ ARG TARGET=/build
 # Build and install
 RUN <<EOR
 	set -eu
+
 	python -m build --wheel
 	python -m venv .env
-	.env/bin/pip install --prefix "${TARGET}/usr" dist/*.whl
-	# fix shebangs of scripts from '#!/work/.env/bin/python'
+	. .env/bin/activate
+	pip install libusb1 pytest toml vdf
+	python -m pytest tests
+	pip install --prefix "${TARGET}/usr" --no-warn-script-location dist/*.whl
+
+	# Save version
+	PYTHONPATH=$(find "${TARGET}" -type d -name site-packages) \
+	python -c "from scc.constants import DAEMON_VERSION; print('VERSION=' + DAEMON_VERSION)" >>/build/.build-metadata.env
+
+	# Fix shebangs of scripts from '#!/work/.env/bin/python'
 	find "${TARGET}/usr/bin" -type f | xargs sed -i 's:work/.env:usr:'
 
 	# Provide input-event-codes.h as fallback for runtime systems without linux headers

@@ -22,11 +22,18 @@
 
 from enum import IntEnum
 
+# python >= 3.10
+#from importlib.metadata import version, packages_distributions
+#distribution_name = packages_distributions()[__package__][0]
+# python < 3.10 (Focal, Bullseye)
+from importlib.metadata import version, distributions
+distribution_name = [dist.metadata["Name"] for dist in distributions() if __package__ in (dist.read_text("top_level.txt") or "").split()][0]
+
 """
 If SC-Controller is updated while daemon is running, DAEMON_VERSION send by
 daemon will differ one one expected by UI and daemon will be forcefully restarted.
 """
-DAEMON_VERSION = "0.4.9.5"
+DAEMON_VERSION = version(distribution_name)
 
 HPERIOD  = 0.02
 LPERIOD  = 0.5
