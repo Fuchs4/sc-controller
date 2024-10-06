@@ -1763,7 +1763,7 @@ or even crash.</property>
                     <property name="margin-left">30</property>
                     <property name="label" translatable="yes">If enabled, any device or application compatibile with Retroarch's Remote RetroPad protocol
 on network can connect and remote-control this computer as additional gamepad.
-&lt;a href="https://github.com/kozec/sc-controller/wiki/Using-phone-with-Retroarch-as-additional-controller"&gt;See wiki for instructions and more info.&lt;/a&gt;</property>
+&lt;a href="https://github.com/C0rn3j/sc-controller/wiki/Using-phone-with-Retroarch-as-additional-controller"&gt;See wiki for instructions and more info.&lt;/a&gt;</property>
                     <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0</property>

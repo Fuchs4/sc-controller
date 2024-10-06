@@ -125,7 +125,7 @@
                 <property name="margin-left">20</property>
                 <property name="margin-right">20</property>
                 <property name="margin-bottom">10</property>
-                <property name="label" translatable="yes">This dialog allows to setup traditional controllers to be used with SC Controller. 
+                <property name="label" translatable="yes">This dialog allows to setup traditional controllers to be used with SC Controller.
 
 Please, select your controller from list bellow and click Next.</property>
                 <property name="xalign">0</property>
@@ -833,9 +833,9 @@ If anything is assigned incorrectly, click on button on image to (re)assign phys
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Warning: evdev access mode was auto-selected for HID device.
 
-That means your account lacks permissons needed to read controller exclusivelly. You can still use controller in evdev mode, but you may have trouble with some games detecting it twice.
+That means your account lacks permissons needed to read controller exclusively. You can still use controller in evdev mode, but you may have trouble with some games detecting it twice.
 
-&lt;a href="https://github.com/kozec/sc-controller/wiki/Evdev-and-HID-mode-for-non-steam-controllers"&gt;Click here&lt;/a&gt; for more info.</property>
+&lt;a href="https://github.com/C0rn3j/sc-controller/wiki/Evdev-and-HID-mode-for-non-steam-controllers"&gt;Click here&lt;/a&gt; for more info.</property>
                             <property name="use-markup">True</property>
                             <property name="justify">fill</property>
                             <property name="wrap">True</property>
@@ -938,7 +938,7 @@ is enabled in Settings or here:</property>
                 <property name="hexpand">True</property>
                 <property name="label" translatable="yes">Change will be applied after emulation is restarted.
 If you have any games running, restarting emulation will
-"unplug" virtual gamepad, what may cause them to ignore 
+"unplug" virtual gamepad, what may cause them to ignore
 future inputs or even crash.</property>
                 <property name="use-markup">True</property>
                 <property name="wrap">True</property>

@@ -37,7 +37,7 @@ Linux:
   - **Others:** You can attempt to use one of the AppImages (try all, AppImages built on older distributions tend to work better), or a package meant for your parent distribution if applicable. Flatpak is planned.
 
 Windows:
-  - It should be possible to get it running as per the [upstream wiki](https://github.com/kozec/sc-controller/wiki/Running-SC-Controller-on-Windows), but this is untested and might be broken, report a bug if so
+  - It should be possible to get it running as per the [wiki](https://github.com/C0rn3j/sc-controller/wiki/Running-SC-Controller-on-Windows), but this is untested and might be broken, report a bug if so
 
 
 ## Building the package by yourself
