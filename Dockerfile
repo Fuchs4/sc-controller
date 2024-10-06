@@ -9,7 +9,7 @@ RUN <<EOR
 
 	# Workaround for outstanding fix of https://bugs.launchpad.net/ubuntu/+source/python-build/+bug/1992108
 	. /etc/os-release
-	if [ ${UBUNTU_CODENAME} = 'jammy' ]; then
+	if [ ${UBUNTU_CODENAME-} = 'jammy' ]; then
 		echo >>/etc/apt/sources.list.d/jammy-proposed.list 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/     jammy-proposed universe'
 		echo >>/etc/apt/sources.list.d/jammy-proposed.list 'deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-proposed universe'
 	fi
@@ -51,7 +51,7 @@ RUN <<EOR
 
 	# Focal workaround, until it is removed completely, builds a semi-broken image (About does not work at minimum)
 	. /etc/os-release
-	if [ ${UBUNTU_CODENAME} = 'focal' ]; then
+	if [ ${UBUNTU_CODENAME-} = 'focal' ]; then
 		sed -i -e 's/>=3.9/>=3.8/' -e 's/py39/py38/' pyproject.toml
 	fi
 
