@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-SC-Controller - Action Editor - "DPAD or Menu"
+"""SC Controller - Action Editor - "DPAD or Menu".
 
 Setups DPAD emulation or menu display
 """

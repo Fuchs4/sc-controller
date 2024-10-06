@@ -1,4 +1,4 @@
-SC-Controller menu file specification
+SC Controller menu file specification
 ----------------------------------------
 
 Menu file contains json-encoded list with menu items (actions), submenus,
@@ -17,13 +17,13 @@ displayed on screen. If `name` is not specified, title is auto-generated.
 Example:
 
 	[{
-	  "id": "item1", 
-	  "action": "profile('Desktop')", 
-	  "name": "Switch to Desktop profile", 
+	  "id": "item1",
+	  "action": "profile('Desktop')",
+	  "name": "Switch to Desktop profile",
 	}, {
-	  "id": "item2", 
-	  "action": "turnoff()", 
-	  "name": "Turn controller OFF", 
+	  "id": "item2",
+	  "action": "turnoff()",
+	  "name": "Turn controller OFF",
 	}]
 
 specifies menu with two items.
@@ -41,7 +41,7 @@ that order.
 Example:
 
 	[{
-	  "submenu": "profiles.menu", 
+	  "submenu": "profiles.menu",
 	  "name": "All Profiles"
 	}]
 
@@ -63,9 +63,9 @@ Example:
 	[{
 	  "generator": "profiles"
 	}, {
-	  "id": "item2", 
-	  "action": "turnoff()", 
-	  "name": "Turn controller OFF", 
+	  "id": "item2",
+	  "action": "turnoff()",
+	  "name": "Turn controller OFF",
 	}]
 
 specifies menu with list of all profiles, followed by one normal menu item.

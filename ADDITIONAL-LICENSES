@@ -1,12 +1,12 @@
 All images in images/ directory, profile files in default_profiles/
 and profile_examples/ and menu files in default_menus/ directories
-are licensed under CC0 license - https://creativecommons.org/publicdomain/zero/1.0/
+are licensed under the CC0 license - https://creativecommons.org/publicdomain/zero/1.0/
 
 Images in images/menu-icons subdirectories are licensed as described
-in 'LICENSES' files in their respective subdirectories.
+in the 'LICENSES' files in their respective subdirectories.
 
-lib/jsonencoder.py is licensed under PSFL, https://www.python.org/download/releases/2.7/license/
-scripts/gamecontrollerdb.txt is taken from Simple DirectMedia Layer library and licensed under zlib license.
-lib/xwrappers.py and lib/vdf.py are part of SC-Controller, licensed under GPL2 as rest of the project.
+lib/jsonencoder.py is licensed under the PSFL, https://www.python.org/download/releases/2.7/license/
+scripts/gamecontrollerdb.txt is taken from the Simple DirectMedia Layer library and licensed under the zlib license.
+lib/xwrappers.py and lib/vdf.py are part of SC Controller, licensed under GPL2 like the rest of the project.
 
-Everything else is licensed under GPL2, as described in 'LICENSE' file.
+Everything else is licensed under GPL2, as described in the 'LICENSE' file.

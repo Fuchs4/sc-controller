@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-SC-Controller - Action Editor - First Page
+"""SC Controller - Action Editor - First Page.
 
 Provides links for quick settings.
 """
@@ -13,7 +10,7 @@ from scc.gui.ae import AEComponent
 from scc.tools import nameof
 
 
-import os, logging
+import logging
 log = logging.getLogger("AE.1st")
 
 __all__ = [ 'FirstPage' ]

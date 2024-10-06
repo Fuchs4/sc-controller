@@ -1,12 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Syncthing-GTK - StatusIcon
-
-"""
-import locale
+"""Syncthing-GTK - StatusIcon."""
 import os
-import sys
 import logging
 
 from gi.repository import GObject
@@ -34,10 +27,9 @@ log = logging.getLogger("StatusIcon")
 
 
 class StatusIcon(GObject.GObject):
-	"""
-	Base class for all status icon backends
-	"""
-	TRAY_TITLE     = _("SC-Controller")
+	"""Base class for all status icon backends."""
+
+	TRAY_TITLE     = _("SC Controller")
 
 	__gsignals__ = {
 		"clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),

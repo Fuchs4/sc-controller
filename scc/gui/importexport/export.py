@@ -201,10 +201,10 @@ class Export(UserDataManager):
 		# Determine format
 		f = Gtk.FileFilter()
 		if self._needs_package():
-			f.set_name("SC-Controller Profile Archive")
+			f.set_name("SC Controller Profile Archive")
 			fmt = "sccprofile.tar.gz"
 		else:
-			f.set_name("SC-Controller Profile")
+			f.set_name("SC Controller Profile")
 			fmt = "sccprofile"
 		f.add_pattern("*.%s" % (fmt,))
 

@@ -18,7 +18,7 @@ class ImportSccprofile(object):
 	def on_btImportSccprofile_clicked(self, *a):
 		# Create filters
 		f1 = Gtk.FileFilter()
-		f1.set_name("SC-Controller Profile or Archive")
+		f1.set_name("SC Controller Profile or Archive")
 		f1.add_pattern("*.sccprofile")
 		f1.add_pattern("*.sccprofile.tar.gz")
 

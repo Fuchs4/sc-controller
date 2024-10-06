@@ -1,4 +1,4 @@
-SC-Controller profile file specification
+SC Controller profile file specification
 ----------------------------------------
 
 Profile file contains json-encoded dictonary with specific keys. Missing keys are substituted with defaults, unknown keys are ignored. See [Desktop.sccprofile](../default_profiles/Desktop.sccprofile) for example.
@@ -57,9 +57,9 @@ levels among which is action executed.
 Example:
 
 	"trigger_left": {
-	  "action": "button(BTN_LEFT)", 
+	  "action": "button(BTN_LEFT)",
 	  "levels": [127, 255]
-	}, 
+	},
 
 Sets action that presses left mouse button, but only if trigger
 is roughly half-pressed.
@@ -88,10 +88,10 @@ Example:
 	"pad_left": {
 	  "ring": {
 	    "inner": { "action": "XY(axis(Axes.ABS_X), raxis(Axes.ABS_Y))" },
-	    "outer": { "action": "XY(axis(Axes.ABS_RX), raxis(Axes.ABS_RY))" }, 
+	    "outer": { "action": "XY(axis(Axes.ABS_RX), raxis(Axes.ABS_RY))" },
 	    "radius": 0.4
 	  }
-	}, 
+	},
 
 defines inner ring binding controlling left stick and outer ring right stick
 of emulated gamepad.
@@ -187,9 +187,9 @@ If set to True, enables OSD for action.
 Example:
 
 	"X": {
-	  "action": "button(Keys.BTN_EAST)", 
+	  "action": "button(Keys.BTN_EAST)",
 	  "osd": true
-	}, 
+	},
 
 enables OSD feedback for X button.
 
@@ -327,9 +327,9 @@ All keys are optional. Value for each key is [action definition](#Action_definit
 Example:
 
 	"buttons": {
-	  "A":    { "action": "button(Keys.BTN_WEST)",  }, 
-	  "B":    { "action": "osd('Hello world!')" }, 
-	  "BACK": { "action": "button(Keys.KEY_LEFTCTRL) and button(Keys.KEY_A)" }, 
+	  "A":    { "action": "button(Keys.BTN_WEST)",  },
+	  "B":    { "action": "osd('Hello world!')" },
+	  "BACK": { "action": "button(Keys.KEY_LEFTCTRL) and button(Keys.KEY_A)" },
 	}
 
 

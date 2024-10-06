@@ -94,7 +94,7 @@ class InputDisplay(OSDWindow):
 		if "Sniffing" in error:
 			log.error("")
 			log.error("=================================================================================")
-			log.error("[!!] Please, enable 'Input Test Mode' on 'Advanced' tab in SC-Controller settings")
+			log.error("[!!] Please, enable 'Input Test Mode' on 'Advanced' tab in SC Controller settings")
 			log.error("=================================================================================")
 		self.quit(3)
 
