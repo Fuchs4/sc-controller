@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Installation script for everything that could not be migrated to pyproject.toml so far."""
 import glob
 
 from setuptools import Extension, setup
