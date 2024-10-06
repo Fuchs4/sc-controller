@@ -2,7 +2,7 @@
 
 [![SCC Linux CI](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml/badge.svg)](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml) [![Build and publish AppImages](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml/badge.svg)](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml)
 
-User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and similar controllers.
+User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and many other controllers.
 
 [![screenshot1](docs/screenshot1-tn.png?raw=true)](docs/screenshot1.png?raw=true)
 [![screenshot2](docs/screenshot2-tn.png?raw=true)](docs/screenshot2.png?raw=true)
@@ -10,7 +10,7 @@ User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and simila
 [![screenshot3](docs/screenshot4-tn.png?raw=true)](docs/screenshot4.png?raw=true)
 
 ## Features
-- Allows to setup, configure and use Steam Controller(s) without ever launching Steam
+- Allows to setup, configure and use Steam Controllers without ever launching Steam
 - Supports profiles switchable in GUI or with controller button
 - Stick, Pads and Gyroscope input
 - Haptic Feedback and in-game Rumble support
@@ -43,7 +43,7 @@ Windows:
 ## Building the package by yourself
 
 ### Dependencies
-  - Python 3.8+
+  - Python 3.9+
   - GTK 3.24+
   - [PyGObject](https://live.gnome.org/PyGObject)
   - [python-gi-cairo](https://packages.debian.org/sid/python-gi-cairo) and [gir1.2-rsvg-2.0](https://packages.debian.org/sid/gir1.2-rsvg-2.0) on Debian-based distributions (included in PyGObject elsewhere)

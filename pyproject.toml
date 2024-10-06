@@ -19,7 +19,7 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Operating System :: POSIX :: Linux"
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 #platforms = ["Linux"]
 
 # https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts
@@ -57,7 +57,7 @@ packages = [
 [tool.ruff]
 # Target non-EOL releases at minimum, or later if needed
 # https://devguide.python.org/versions/
-target-version = "py38"
+target-version = "py39"
 # Project uses 80 sporadically, so just do soft 80 and hard break at 120
 line-length = 120
 
