@@ -1,6 +1,7 @@
 # SC Controller
 
-[![SCC Linux CI](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml/badge.svg)](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml) [![Build and publish AppImages](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml/badge.svg)](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml)
+[![SCC Linux CI](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml/badge.svg?branch=python3)](https://github.com/C0rn3j/sc-controller/actions/workflows/scc-linux.yml)
+[![Build and publish AppImages](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml/badge.svg?event=release)](https://github.com/C0rn3j/sc-controller/actions/workflows/appimage.yml)
 
 User-mode driver, mapper and GTK3 based GUI for Steam Controller, DS4 and many other controllers.
 
