@@ -28,6 +28,7 @@ from scc.modifiers import (
 	BallModifier,
 	ClickModifier,
 	DeadzoneModifier,
+	CurveModifier,
 	FeedbackModifier,
 	ModeModifier,
 	Modifier,
@@ -79,10 +80,10 @@ class ActionEditor(Editor):
 		# That way, stuff like Rotation settings is not shown when editor
 		# is used to edit menu actions.
 		Action.AC_BUTTON:  Action.MOD_OSD | Action.MOD_FEEDBACK,
-		Action.AC_TRIGGER: Action.MOD_OSD | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_DEADZONE,
-		Action.AC_STICK:   Action.MOD_OSD | Action.MOD_CLICK | Action.MOD_DEADZONE | Action.MOD_ROTATE | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_SMOOTH,
-		Action.AC_PAD:     Action.MOD_OSD | Action.MOD_CLICK | Action.MOD_DEADZONE | Action.MOD_ROTATE | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_SMOOTH | Action.MOD_BALL,
-		Action.AC_GYRO:    Action.MOD_OSD | Action.MOD_SENSITIVITY | Action.MOD_SENS_Z | Action.MOD_DEADZONE | Action.MOD_FEEDBACK,
+		Action.AC_TRIGGER: Action.MOD_OSD | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_DEADZONE | Action.MOD_CURVE,
+		Action.AC_STICK:   Action.MOD_OSD | Action.MOD_CLICK | Action.MOD_DEADZONE | Action.MOD_CURVE | Action.MOD_ROTATE | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_SMOOTH,
+		Action.AC_PAD:     Action.MOD_OSD | Action.MOD_CLICK | Action.MOD_DEADZONE | Action.MOD_CURVE | Action.MOD_ROTATE | Action.MOD_SENSITIVITY | Action.MOD_FEEDBACK | Action.MOD_SMOOTH | Action.MOD_BALL,
+		Action.AC_GYRO:    Action.MOD_OSD | Action.MOD_SENSITIVITY | Action.MOD_SENS_Z | Action.MOD_DEADZONE | Action.MOD_CURVE | Action.MOD_FEEDBACK,
 		Action.AC_OSK:     0,
 		Action.AC_MENU:    Action.MOD_OSD,
 		AEC_MENUITEM:      0,
@@ -105,6 +106,8 @@ class ActionEditor(Editor):
 		self.feedback = [0.0, 0.0, 0.0]      # Feedback slider values, set later
 		self.deadzone = [0, 0]               # Deadzone slider values, set later
 		self.deadzone_mode = None            # None for 'disabled'
+		self.curve_widgets = []              # Curve sliders, labels and 'clear' buttons
+		self.curve_strength = []             # Curve slider values
 		self.feedback_position = None        # None for 'disabled'
 		self.smoothing = None                # None for 'disabled'
 		self.friction = -1                   # -1 for 'disabled'
@@ -160,6 +163,13 @@ class ActionEditor(Editor):
 				self.builder.get_object("sclDZ%s" % (key,)),
 				self.builder.get_object("btClearDZ%s" % (key,)),
 				self.deadzone[i], # default value
+			))
+		for i in (0, 1):
+			self.curve_widgets.append((
+				self.builder.get_object("sclCurve%s" % (XYZ[i],)),
+				self.builder.get_object("lblCurve%s" % (XYZ[i],)),
+				self.builder.get_object("btClearCurve%s" % (XYZ[i],)),
+				self.builder.get_object("cbCurveInvert%s" % (XYZ[i],)),
 			))
 
 		if self.app.osd_mode:
@@ -475,6 +485,12 @@ class ActionEditor(Editor):
 			if source == button:
 				scale.set_value(default)
 
+	def on_btClearCurve_clicked(self, source, *a):
+		i = 0
+		for scale, label, button, checkbox in self.curve_widgets:
+			if source == button:
+				scale.set_value(self.curve_defaults[i])
+				i += 1
 
 	def on_btClear_clicked(self, *a):
 		""" Handler for clear button """
@@ -618,6 +634,16 @@ class ActionEditor(Editor):
 			set_action = True
 
 
+		# Curve
+		for i in range(len(self.curve_strength)):
+			target = self.curve_widgets[i][0].get_value()
+			if self.curve_widgets[i][3].get_active():
+				target = -target
+			if self.curve[i] != target:
+				self.curve[i] = target
+				set_action = True
+
+
 		# Rest
 		if self.click is not None and cbRequireClick.get_active() != self.click:
 			self.click = cbRequireClick.get_active()
@@ -693,6 +719,10 @@ class ActionEditor(Editor):
 			if self.deadzone_mode is not None:
 				action = DeadzoneModifier(self.deadzone_mode, self.deadzone[0], self.deadzone[1], action)
 
+		if (cm & Action.MOD_CURVE) != 0:
+			if self.curve_strength is not None:
+				action = CurveModifier(self.curve_strength, action)
+
 		if (cm & Action.MOD_ROTATE) != 0:
 			if self.rotation_angle != 0.0:
 				action = RotateInputModifier(self.rotation_angle, action)
@@ -714,7 +744,7 @@ class ActionEditor(Editor):
 		Return False for everything else, even if it is instalce of Modifier subclass.
 		"""
 		if isinstance(action, (ClickModifier, SensitivityModifier,
-				DeadzoneModifier, FeedbackModifier, RotateInputModifier,
+				DeadzoneModifier, CurveModifier, FeedbackModifier, RotateInputModifier,
 				SmoothModifier, BallModifier)):
 			return True
 		return bool(isinstance(action, OSDAction) and action.action is not None)
@@ -763,6 +793,16 @@ class ActionEditor(Editor):
 				self.deadzone_mode = action.mode
 				self.deadzone[0] = action.lower
 				self.deadzone[1] = action.upper
+				action = action.action
+			# if isinstance(action, CurveModifier):
+			# 	self.curve_strength = action.curve_strength
+			# 	action = action.action
+			if isinstance(action, CurveModifier):
+				if index < 0:
+					for i in range(len(self.curve_strength)):
+						self.curve_strength[i] = action.speeds[i]
+				else:
+					self.curve_strength[index] = action.speeds[0]
 				action = action.action
 			if isinstance(action, SensitivityModifier):
 				if index < 0:
@@ -962,6 +1002,10 @@ class ActionEditor(Editor):
 		# Deadzone
 		grDeadzone = self.builder.get_object("grDeadzone")
 		grDeadzone.set_sensitive((cm & Action.MOD_DEADZONE) != 0)
+
+		# Curve
+		grCurve = self.builder.get_object("grCurve")
+		grCurve.set_sensitive((cm & Action.MOD_CURVE) != 0)
 
 		# Sensitivity
 		grSensitivity = self.builder.get_object("grSensitivity")

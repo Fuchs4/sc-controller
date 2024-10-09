@@ -420,6 +420,12 @@ range of deadzone.
 to range of deadzone. Zero on input is mapped to zero on output, so there is
 area over which output "jumps" when stick is tilted.
 
+#### <a name="curve"></a> curve(strength, action)
+Enables curve on trigger or stick.
+Strength defaults to 0 and must be between -100 and +100.
+
+Negative values create a flat curve, positive values create a high curve.
+
 
 #### <a name="smooth"></a> smooth([buffer=8, [multiplier=0.7, [filter=2, ]]] action)
 Enables input smoothing. Position is computed as weighed average of last X

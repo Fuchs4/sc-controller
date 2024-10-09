@@ -817,6 +817,206 @@ class DeadzoneModifier(Modifier):
 		return self.action.gyro(mapper, pitch, yaw, roll, q1, q2, q3, q4)
 
 
+class CurveModifier(Modifier):
+	COMMAND = "curve"
+	JUMP_HARDCODED_LIMIT = 5
+
+	def _mod_init(self, *params):
+		if len(params) < 1: raise TypeError("Not enough parameters")
+		if type(params[0]) is str:
+			self.strength = params[0] / 1000
+			if self.strength < -1 or self.strength > 1:
+				raise ValueError("Invalid curve strength")
+			self.multiplier = 1/(1**(abs(self.strength)))
+		else:
+			self.strength = 0
+		if self.strength < 0:
+			self.multiplier = -self.multiplier
+
+
+	def _convert(self, x, y, range):
+		return self.multiplier*x**self.strength, self.multiplier*y**self.strength
+
+
+	def mode_CUT(self, x, y, range):
+		"""
+		If input value is out of deadzone range, output value is zero
+		"""
+		if y == 0:
+			# Small optimalization for 1D input, for example trigger
+			return (0 if abs(x) < self.lower or abs(x) > self.upper else x), 0
+		distance = sqrt(x*x + y*y)
+		if distance < self.lower or distance > self.upper:
+			return 0, 0
+		return x, y
+
+
+	def mode_ROUND(self, x, y, range):
+		"""
+		If input value bellow deadzone range, output value is zero
+		If input value is above deadzone range,
+		output value is 1 (or maximum allowed)
+		"""
+		if y == 0:
+			# Small optimalization for 1D input, for example trigger
+			if abs(x) > self.upper:
+				return copysign(range, x), 0
+			return (0 if abs(x) < self.lower else x), 0
+		distance = sqrt(x*x + y*y)
+		if distance < self.lower:
+			return 0, 0
+		if distance > self.upper:
+			angle = atan2(x, y)
+			return range * sin(angle), range * cos(angle)
+		return x, y
+
+
+	def mode_LINEAR(self, x, y, range):
+		"""
+		Input value is scaled, so entire output range is covered by
+		reduced input range of deadzone.
+		"""
+		if y == 0:
+			# Small optimalization for 1D input, for example trigger
+			return copysign(
+				clamp(
+					0,
+					((x - self.lower) / (self.upper - self.lower)) * range,
+					range),
+				x
+			), 0
+		distance = clamp(self.lower, sqrt(x*x + y*y), self.upper)
+		distance = (distance - self.lower) / (self.upper - self.lower) * range
+
+		angle = atan2(x, y)
+		return distance * sin(angle), distance * cos(angle)
+
+
+	def mode_MINIMUM(self, x, y, range):
+		"""
+		https://github.com/kozec/sc-controller/issues/356
+		Inversion of LINEAR; input value is scaled so entire input range is
+		mapped to range of deadzone.
+		"""
+		if y == 0:
+			# Small optimalization for 1D input, for example trigger
+			if abs(x) < DeadzoneModifier.JUMP_HARDCODED_LIMIT:
+				return 0, 0
+			return (copysign(
+						(float(abs(x)) / range * (self.upper - self.lower))
+						+ self.lower, x), 0)
+		distance = sqrt(x*x + y*y)
+		if distance < DeadzoneModifier.JUMP_HARDCODED_LIMIT:
+			return 0, 0
+		distance = (distance / range * (self.upper - self.lower)) + self.lower
+
+		angle = atan2(x, y)
+		return distance * sin(angle), distance * cos(angle)
+
+	def _convert_trigger_stick_range(self, position, trigger_range):
+		result = clamp(0,
+		    (position / trigger_range) * STICK_PAD_MAX,
+		    STICK_PAD_MAX)
+
+		return result
+
+	def _convert_stick_trigger_range(self, position):
+		result = clamp(0,
+		    (position / STICK_PAD_MAX) * TRIGGER_MAX,
+		    TRIGGER_MAX)
+
+		return result
+
+	@staticmethod
+	def decode(data, a, *b):
+		return DeadzoneModifier(
+			data["deadzone"]["mode"] if "mode" in data["deadzone"] else CUT,
+			data["deadzone"]["lower"] if "lower" in data["deadzone"] else STICK_PAD_MIN,
+			data["deadzone"]["upper"] if "upper" in data["deadzone"] else STICK_PAD_MAX,
+			a
+		)
+
+
+	def compress(self):
+		self.action = self.action.compress()
+		if isinstance(self.action, BallModifier) and self.mode == MINIMUM:
+			# Special case where BallModifier has to be applied before
+			# deadzone is computed
+			ballmod = self.action
+			self.action, ballmod.action = ballmod.action, self
+			return ballmod
+		elif isinstance(self.action, GyroAbsAction):
+			# Another special case, GyroAbs has to handle deadzone
+			# only after math is finished
+			self.action._deadzone_fn = self._convert
+			return self.action
+		return self
+
+
+	def strip(self):
+		return self.action.strip()
+
+
+	def __str__(self):
+		return "<Modifier '%s', %s>" % (self.COMMAND, self.action)
+
+	__repr__ = __str__
+
+
+	def describe(self, context):
+		dsc = self.action.describe(context)
+		if "\n" in dsc:
+			return "%s\n(with deadzone)" % (dsc,)
+		else:
+			return "%s (with deadzone)" % (dsc,)
+
+
+	def to_string(self, multiline=False, pad=0):
+		params = []
+		if self.mode != CUT:
+			params.append(self.mode)
+		params.append(str(self.lower))
+		if self.upper != STICK_PAD_MAX:
+			params.append(str(self.upper))
+		params.append(self.action.to_string(multiline))
+
+		return "deadzone(%s)" % ( ", ".join(params), )
+
+
+	def trigger(self, mapper, position, old_position):
+		# Need to convert trigger value to stick range for deadzone modifier
+		# calcs to work as intended
+		position = self._convert_trigger_stick_range(position, TRIGGER_MAX)
+
+		# Perform dead zone calculations
+		position = self._convert(position, 0, STICK_PAD_MAX)
+
+		# Convert calculated stick position value back to applicable
+		# position in trigger range
+		position = self._convert_stick_trigger_range(position[0])
+		# Invoke trigger action with new value
+		return self.action.trigger(mapper, position, old_position)
+
+
+	def axis(self, mapper, position, what):
+		position = self._convert(position, 0, STICK_PAD_MAX)
+		return self.action.axis(mapper, position, what)
+
+
+	def pad(self, mapper, position, what):
+		position = self._convert(position, 0, STICK_PAD_MAX)
+		return self.action.pad(mapper, position, what)
+
+
+	def whole(self, mapper, x, y, what):
+		x, y = self._convert(x, y, STICK_PAD_MAX)
+		return self.action.whole(mapper, x, y, what)
+
+
+	def gyro(self, mapper, pitch, yaw, roll, q1, q2, q3, q4):
+		return self.action.gyro(mapper, pitch, yaw, roll, q1, q2, q3, q4)
+
+
 class ModeModifier(Modifier):
 	COMMAND = "mode"
 	PROFILE_KEYS = ("modes",)

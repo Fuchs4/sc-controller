@@ -85,6 +85,7 @@ class Action(object):
 	MOD_OSD			= 1 << 1
 	MOD_FEEDBACK	= 1 << 2
 	MOD_DEADZONE	= 1 << 3
+	MOD_CURVE		= 1 << 10
 	MOD_SENSITIVITY	= 1 << 4
 	MOD_SENS_Z		= 1 << 5	# Sensitivity of 3rd axis
 	MOD_ROTATE		= 1 << 6
@@ -827,7 +828,7 @@ class MouseAction(WholeHapticAction, Action):
 	def get_compatible_modifiers(self):
 		return ( Action.MOD_SENSITIVITY | Action.MOD_SENS_Z | Action.MOD_ROTATE
 				| Action.MOD_SMOOTH | Action.MOD_BALL | Action.MOD_FEEDBACK
-				| Action.MOD_DEADZONE )
+				| Action.MOD_DEADZONE | Action.MOD_CURVE )
 
 
 	def get_previewable(self):
@@ -966,7 +967,7 @@ class MouseAbsAction(Action):
 
 
 	def get_compatible_modifiers(self):
-		return ( Action.MOD_SENSITIVITY | Action.MOD_SENS_Z | Action.MOD_DEADZONE )
+		return ( Action.MOD_SENSITIVITY | Action.MOD_SENS_Z | Action.MOD_DEADZONE | Action.MOD_CURVE )
 
 
 	def get_previewable(self):
@@ -1255,7 +1256,7 @@ class GyroAbsAction(HapticEnabledAction, GyroAction):
 	def get_compatible_modifiers(self):
 		return ( HapticEnabledAction.get_compatible_modifiers(self)
 			| GyroAction.get_compatible_modifiers(self)
-			| Action.MOD_DEADZONE )
+			| Action.MOD_DEADZONE | Action.MOD_CURVE )
 
 
 	def get_previewable(self) -> bool:

@@ -124,6 +124,18 @@ Example:
 	    "upper": 200
   	}},
 
+#### `curve`
+Specifies curve. Allows for `strength` subkey defaulting to
+*0*.
+
+Example:
+
+	"trigger_left": {
+ 	  "action": "axis(Axes.ABS_Z)",
+ 	  "curve": {
+	    "strength": -25,
+  	}},
+
 
 #### `sensitivity`
 Specifies input sensitivity. Value is list with one or two values for sensitivity
