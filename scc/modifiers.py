@@ -838,95 +838,6 @@ class CurveModifier(Modifier):
 		return self.multiplier*x**self.strength, self.multiplier*y**self.strength
 
 
-	def mode_CUT(self, x, y, range):
-		"""
-		If input value is out of deadzone range, output value is zero
-		"""
-		if y == 0:
-			# Small optimalization for 1D input, for example trigger
-			return (0 if abs(x) < self.lower or abs(x) > self.upper else x), 0
-		distance = sqrt(x*x + y*y)
-		if distance < self.lower or distance > self.upper:
-			return 0, 0
-		return x, y
-
-
-	def mode_ROUND(self, x, y, range):
-		"""
-		If input value bellow deadzone range, output value is zero
-		If input value is above deadzone range,
-		output value is 1 (or maximum allowed)
-		"""
-		if y == 0:
-			# Small optimalization for 1D input, for example trigger
-			if abs(x) > self.upper:
-				return copysign(range, x), 0
-			return (0 if abs(x) < self.lower else x), 0
-		distance = sqrt(x*x + y*y)
-		if distance < self.lower:
-			return 0, 0
-		if distance > self.upper:
-			angle = atan2(x, y)
-			return range * sin(angle), range * cos(angle)
-		return x, y
-
-
-	def mode_LINEAR(self, x, y, range):
-		"""
-		Input value is scaled, so entire output range is covered by
-		reduced input range of deadzone.
-		"""
-		if y == 0:
-			# Small optimalization for 1D input, for example trigger
-			return copysign(
-				clamp(
-					0,
-					((x - self.lower) / (self.upper - self.lower)) * range,
-					range),
-				x
-			), 0
-		distance = clamp(self.lower, sqrt(x*x + y*y), self.upper)
-		distance = (distance - self.lower) / (self.upper - self.lower) * range
-
-		angle = atan2(x, y)
-		return distance * sin(angle), distance * cos(angle)
-
-
-	def mode_MINIMUM(self, x, y, range):
-		"""
-		https://github.com/kozec/sc-controller/issues/356
-		Inversion of LINEAR; input value is scaled so entire input range is
-		mapped to range of deadzone.
-		"""
-		if y == 0:
-			# Small optimalization for 1D input, for example trigger
-			if abs(x) < DeadzoneModifier.JUMP_HARDCODED_LIMIT:
-				return 0, 0
-			return (copysign(
-						(float(abs(x)) / range * (self.upper - self.lower))
-						+ self.lower, x), 0)
-		distance = sqrt(x*x + y*y)
-		if distance < DeadzoneModifier.JUMP_HARDCODED_LIMIT:
-			return 0, 0
-		distance = (distance / range * (self.upper - self.lower)) + self.lower
-
-		angle = atan2(x, y)
-		return distance * sin(angle), distance * cos(angle)
-
-	def _convert_trigger_stick_range(self, position, trigger_range):
-		result = clamp(0,
-		    (position / trigger_range) * STICK_PAD_MAX,
-		    STICK_PAD_MAX)
-
-		return result
-
-	def _convert_stick_trigger_range(self, position):
-		result = clamp(0,
-		    (position / STICK_PAD_MAX) * TRIGGER_MAX,
-		    TRIGGER_MAX)
-
-		return result
-
 	@staticmethod
 	def decode(data, a, *b):
 		return DeadzoneModifier(
@@ -966,9 +877,9 @@ class CurveModifier(Modifier):
 	def describe(self, context):
 		dsc = self.action.describe(context)
 		if "\n" in dsc:
-			return "%s\n(with deadzone)" % (dsc,)
+			return "%s\n(with curve)" % (dsc,)
 		else:
-			return "%s (with deadzone)" % (dsc,)
+			return "%s (with curve)" % (dsc,)
 
 
 	def to_string(self, multiline=False, pad=0):
@@ -980,7 +891,7 @@ class CurveModifier(Modifier):
 			params.append(str(self.upper))
 		params.append(self.action.to_string(multiline))
 
-		return "deadzone(%s)" % ( ", ".join(params), )
+		return "curve(%s)" % ( ", ".join(params), )
 
 
 	def trigger(self, mapper, position, old_position):
