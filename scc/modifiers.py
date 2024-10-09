@@ -885,11 +885,7 @@ class CurveModifier(Modifier):
 
 	def to_string(self, multiline=False, pad=0):
 		params = []
-		if self.mode != CUT:
-			params.append(self.mode)
-		params.append(str(self.lower))
-		if self.upper != STICK_PAD_MAX:
-			params.append(str(self.upper))
+		params.append(str(self.strength))
 		params.append(self.action.to_string(multiline))
 
 		return "curve(%s)" % ( ", ".join(params), )

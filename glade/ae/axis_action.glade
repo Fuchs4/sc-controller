@@ -36,6 +36,14 @@
     <property name="page-increment">0.10</property>
     <property name="page-size">0.01</property>
   </object>
+  <object class="GtkAdjustment" id="adjCurve">
+    <property name="lower">-10.1</property>
+    <property name="upper">10.01</property>
+    <property name="value">0</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">0.10</property>
+    <property name="page-size">0.01</property>
+  </object>
   <object class="GtkListStore" id="lstAreaType">
     <columns>
       <!-- column-name text -->

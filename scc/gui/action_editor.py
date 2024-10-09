@@ -108,6 +108,7 @@ class ActionEditor(Editor):
 		self.deadzone_mode = None            # None for 'disabled'
 		self.curve_widgets = []              # Curve sliders, labels and 'clear' buttons
 		self.curve_strength = []             # Curve slider values
+		self.curve_defaults = [0.0, 0.0]     # Clear button clears to this
 		self.feedback_position = None        # None for 'disabled'
 		self.smoothing = None                # None for 'disabled'
 		self.friction = -1                   # -1 for 'disabled'

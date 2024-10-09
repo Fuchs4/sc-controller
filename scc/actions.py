@@ -85,13 +85,13 @@ class Action(object):
 	MOD_OSD			= 1 << 1
 	MOD_FEEDBACK	= 1 << 2
 	MOD_DEADZONE	= 1 << 3
-	MOD_CURVE		= 1 << 10
 	MOD_SENSITIVITY	= 1 << 4
 	MOD_SENS_Z		= 1 << 5	# Sensitivity of 3rd axis
 	MOD_ROTATE		= 1 << 6
 	MOD_POSITION	= 1 << 7
 	MOD_SMOOTH		= 1 << 8
 	MOD_BALL		= 1 << 9
+	MOD_CURVE		= 1 << 10
 
 	def __init__(self, *parameters):
 		self.parameters = parameters
@@ -2200,7 +2200,7 @@ class XYAction(WholeHapticAction, Action):
 
 	def get_compatible_modifiers(self):
 		mods = ( Action.MOD_FEEDBACK | Action.MOD_SENSITIVITY
-			| Action.MOD_ROTATE | Action.MOD_SMOOTH
+			| Action.MOD_ROTATE | Action.MOD_SMOOTH | Action.MOD_CURVE
 			| self.x.get_compatible_modifiers()
 			| self.y.get_compatible_modifiers()
 		)

@@ -6,7 +6,7 @@ Base class for main application window and OSD Keyboard bindings editor.
 """
 from scc.tools import _
 
-from scc.modifiers import ModeModifier, SensitivityModifier, FeedbackModifier
+from scc.modifiers import ModeModifier, SensitivityModifier, FeedbackModifier, CurveModifier
 from scc.modifiers import DoubleclickModifier, HoldModifier
 from scc.actions import NoAction, RingAction, MultiAction
 from scc.macros import Macro, Type, Repeat, Cycle
@@ -151,6 +151,8 @@ class BindingEditor(object):
 	def choose_editor(self, action, title, id=None):
 		""" Chooses apropripate Editor instance for edited action """
 		if isinstance(action, SensitivityModifier):
+			action = action.action
+		if isinstance(action, CurveModifier):
 			action = action.action
 		if isinstance(action, FeedbackModifier):
 			action = action.action
