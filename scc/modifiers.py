@@ -819,7 +819,8 @@ class DeadzoneModifier(Modifier):
 
 class CurveModifier(Modifier):
 	COMMAND = "curve"
-	JUMP_HARDCODED_LIMIT = 5
+	PROFILE_KEYS = ("curve",)
+	JUMP_HARDCODED_LIMIT = -5
 
 	def _mod_init(self, *params):
 		if len(params) < 1: raise TypeError("Not enough parameters")
